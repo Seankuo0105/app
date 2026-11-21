@@ -1,0 +1,1833 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>山豬實行｜官方會員中心</title>
+
+  <!-- LINE / 社群預覽設定 (Open Graph) -->
+  <meta name="description" content="這是一個賺取點數並參加活動...">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="山豬實行｜官方會員中心">
+  <meta property="og:description" content="這是一個賺取點數並參加活動...">
+  <meta property="og:image" content="https://seankuo0105.github.io/boar/pig4k.png">
+  <meta property="og:url" content="https://seankuo0105.github.io/app/">
+
+  <!-- 網站與 Apple 加入主畫面 Icon -->
+  <link rel="icon" href="https://seankuo0105.github.io/boar/pig4k.png?v=5" type="image/png">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://seankuo0105.github.io/boar/pig4k.png?v=5">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="山豬實行">
+
+  <script>
+    // ==========================================
+    // 🐗 【設定專區】Google Script 後台網址
+    // ==========================================
+    const API_URL = "https://script.google.com/macros/s/AKfycby43847XJCma5DwcsiYOrUIhOYhxKngnGENNpr6SKytylgp04aCZ8yFsz2ONtH0Y75L/exec";
+  </script>
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-main: #f4f7f9;
+      --bg-card: #ffffff;
+      --bg-soft: #f8fafc;
+      --bg-muted: #e2e8f0;
+      --bg-hover: #f1f5f9;
+      --text-main: #1e293b;
+      --text-sub: #64748b;
+      --primary: #f59e0b;
+      --primary-hover: #d97706;
+      --primary-soft: #fef3c7;
+      --primary-text: #b45309;
+      --danger: #dc2626;
+      --danger-soft: #fee2e2;
+      --success: #059669;
+      --success-soft: #d1fae5;
+      --info: #2563eb;
+      --info-soft: #dbeafe;
+      --border: #e5e7eb;
+      --input-bg: #ffffff;
+      --shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+      --card-shadow: 0 2px 10px rgba(15, 23, 42, 0.03);
+    }
+
+    /* 深色模式自動跟隨裝置設定 */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-main: #0f172a;
+        --bg-card: #1e293b;
+        --bg-soft: #263348;
+        --bg-muted: #334155;
+        --bg-hover: #334155;
+        --text-main: #f1f5f9;
+        --text-sub: #94a3b8;
+        --primary: #f59e0b;
+        --primary-hover: #fbbf24;
+        --primary-soft: rgba(245, 158, 11, 0.2);
+        --primary-text: #fbbf24;
+        --danger: #f87171;
+        --danger-soft: rgba(248, 113, 113, 0.16);
+        --success: #34d399;
+        --success-soft: rgba(52, 211, 153, 0.16);
+        --info: #60a5fa;
+        --info-soft: rgba(96, 165, 250, 0.18);
+        --border: #334155;
+        --input-bg: #0f172a;
+        --shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+        --card-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+      }
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Noto Sans TC', sans-serif; }
+    body { background: var(--bg-main); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; transition: background 0.2s, color 0.2s; }
+    .hidden { display: none !important; }
+
+    /* 頂部列（維持原版清爽樣式） */
+    header {
+      background: var(--bg-card); border-bottom: 1px solid var(--border);
+      padding: 12px 24px; display: flex; justify-content: space-between; align-items: center;
+      position: sticky; top: 0; z-index: 50;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; font-weight: 900; font-size: 1.2rem; color: var(--text-main); }
+    .brand img { width: 38px; height: 38px; border-radius: 10px; object-fit: cover; border: 2px solid var(--primary); }
+    .brand-sep { color: var(--text-sub); font-weight: 400; margin: 0 2px; opacity: 0.6; }
+    .header-actions { display: flex; align-items: center; gap: 10px; }
+    .points-pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--primary-soft); color: var(--primary-text);
+      padding: 7px 15px; border-radius: 999px; font-weight: 800; font-size: 0.94rem;
+    }
+    .logout-pill {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: var(--danger-soft); color: var(--danger);
+      padding: 7px 14px; border-radius: 10px; font-weight: 700; font-size: 0.9rem;
+      border: none; cursor: pointer; transition: opacity 0.2s;
+    }
+    .logout-pill:hover { opacity: 0.85; }
+
+    /* 通用按鈕與輸入框 */
+    button, .btn {
+      cursor: pointer; border: none; border-radius: 10px; font-weight: 700;
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      transition: all 0.18s; font-size: 0.92rem; padding: 10px 16px;
+    }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { background: var(--primary-hover); transform: translateY(-1px); }
+    .btn-primary:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
+    .btn-muted { background: var(--bg-muted); color: var(--text-sub); }
+    .btn-muted:disabled { cursor: not-allowed; opacity: 0.85; }
+    .btn-soft { background: var(--bg-soft); color: var(--text-main); border: 1px solid var(--border); }
+    .btn-soft:hover { background: var(--bg-hover); }
+    .btn-danger { background: var(--danger-soft); color: var(--danger); }
+    .btn-danger:hover { background: var(--danger); color: #fff; }
+    .btn-sm { padding: 6px 12px; font-size: 0.82rem; border-radius: 8px; }
+
+    input, textarea, select {
+      width: 100%; padding: 11px 14px; border-radius: 10px;
+      border: 1px solid var(--border); background: var(--input-bg); color: var(--text-main);
+      font-size: 0.94rem; outline: none; transition: border-color 0.2s;
+    }
+    input:focus, textarea:focus, select:focus { border-color: var(--primary); }
+    label { display: block; font-size: 0.85rem; font-weight: 700; color: var(--text-sub); margin-bottom: 6px; }
+
+    /* 自動登入畫面 */
+    #auto-login-screen {
+      max-width: 420px; width: 92%; margin: 90px auto;
+      background: var(--bg-card); border-radius: 20px; padding: 40px 28px;
+      border: 1px solid var(--border); box-shadow: var(--shadow); text-align: center;
+    }
+    .spinner {
+      width: 44px; height: 44px; border: 4px solid var(--border);
+      border-top-color: var(--primary); border-radius: 50%;
+      margin: 0 auto 18px; animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* 登入與註冊畫面（維持原版卡片視覺） */
+    #auth-section {
+      max-width: 440px; width: 92%; margin: 54px auto;
+      background: var(--bg-card); border-radius: 22px; padding: 34px 28px;
+      border: 1px solid var(--border); box-shadow: var(--shadow);
+    }
+    .auth-header { text-align: center; margin-bottom: 22px; }
+    .auth-header img { width: 74px; height: 74px; border-radius: 18px; border: 3px solid var(--primary); margin-bottom: 12px; object-fit: cover; }
+    .auth-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; background: var(--bg-soft); padding: 5px; border-radius: 12px; margin-bottom: 20px; border: 1px solid var(--border); }
+    .auth-tab { background: transparent; color: var(--text-sub); padding: 10px; border-radius: 9px; font-weight: 700; }
+    .auth-tab.active { background: var(--bg-card); color: var(--text-main); box-shadow: 0 2px 6px rgba(0,0,0,0.06); }
+    .form-group { margin-bottom: 14px; }
+    .alert-box { padding: 11px 14px; border-radius: 10px; font-size: 0.88rem; font-weight: 600; margin-bottom: 16px; background: var(--danger-soft); color: var(--danger); }
+
+    /* 主控台版面（維持原版左側名片＋選單、右側主卡） */
+    #app-section {
+      max-width: 1200px; width: 95%; margin: 22px auto 44px;
+      display: grid; grid-template-columns: 268px 1fr; gap: 22px; align-items: start;
+    }
+    @media (max-width: 860px) {
+      #app-section { grid-template-columns: 1fr; }
+    }
+    .card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 18px; padding: 24px; box-shadow: var(--shadow);
+    }
+    .profile-card { text-align: center; margin-bottom: 16px; padding: 22px 18px; }
+    .profile-avatar {
+      width: 86px; height: 86px; border-radius: 50%; object-fit: cover;
+      border: 3px solid var(--primary); background: var(--bg-soft); margin-bottom: 10px;
+    }
+    .title-badge {
+      display: inline-block; background: var(--primary-soft); color: var(--primary-text);
+      padding: 3px 12px; border-radius: 999px; font-size: 0.8rem; font-weight: 800; margin: 6px 0 8px;
+    }
+    .menu-card { padding: 10px; }
+    .nav-list { display: flex; flex-direction: column; gap: 4px; }
+    .nav-divider { height: 1px; background: var(--border); margin: 6px 10px; }
+    .nav-group-label { font-size: 0.72rem; font-weight: 800; color: var(--text-sub); padding: 4px 12px 2px; letter-spacing: 0.04em; }
+    .nav-btn {
+      width: 100%; justify-content: flex-start; padding: 11px 14px; gap: 10px;
+      background: transparent; color: var(--text-sub); border-radius: 11px; text-align: left; font-weight: 700;
+    }
+    .nav-btn:hover { background: var(--bg-hover); color: var(--text-main); }
+    .nav-btn.active { background: var(--primary-soft); color: var(--primary-text); }
+
+    .section-title { font-size: 1.32rem; font-weight: 900; display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+    .section-title .material-symbols-outlined { color: var(--primary); }
+    .section-sub { color: var(--text-sub); font-size: 0.9rem; margin-bottom: 20px; line-height: 1.5; }
+
+    /* 原版遊樂場卡片（3 欄、純白卡片、綠色獎勵、橘色/灰色滿版按鈕） */
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    @media (max-width: 1060px) { .grid-3 { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 580px) { .grid-3 { grid-template-columns: 1fr; } }
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+
+    .game-card {
+      background: var(--bg-card); border: 1px solid var(--border); box-shadow: var(--card-shadow);
+      border-radius: 16px; padding: 18px; display: flex; flex-direction: column; justify-content: space-between; gap: 14px;
+      transition: transform 0.18s, border-color 0.18s;
+    }
+    .game-card:hover { transform: translateY(-2px); border-color: var(--primary); }
+    .game-emoji { font-size: 1.75rem; margin-bottom: 6px; }
+    .game-name { font-weight: 900; font-size: 1.05rem; margin-bottom: 6px; }
+    .game-desc { font-size: 0.85rem; color: var(--text-sub); line-height: 1.5; }
+    .game-reward { font-size: 0.86rem; color: var(--success); font-weight: 800; margin-bottom: 10px; }
+
+    /* 優化後的股市分頁 */
+    .summary-strip {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px;
+      margin-bottom: 18px;
+    }
+    .summary-tile {
+      background: var(--bg-soft); border: 1px solid var(--border);
+      border-radius: 14px; padding: 14px 16px;
+    }
+    .summary-label { font-size: 0.78rem; color: var(--text-sub); font-weight: 700; margin-bottom: 4px; }
+    .summary-val { font-size: 1.2rem; font-weight: 900; color: var(--text-main); }
+
+    .stock-card {
+      background: var(--bg-card); border: 1px solid var(--border); box-shadow: var(--card-shadow);
+      border-radius: 16px; padding: 18px; display: flex; flex-direction: column; gap: 12px;
+    }
+    .stock-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+    .stock-price { font-size: 1.45rem; font-weight: 900; color: var(--primary); }
+    .stock-delta-up { color: #ef4444; font-weight: 800; font-size: 0.82rem; }
+    .stock-delta-down { color: #10b981; font-weight: 800; font-size: 0.82rem; }
+    .sparkline { width: 100%; height: 68px; background: var(--bg-soft); border-radius: 10px; border: 1px solid var(--border); }
+    .quick-qty { display: flex; gap: 6px; flex-wrap: wrap; }
+    .qty-chip {
+      padding: 4px 9px; font-size: 0.76rem; border-radius: 7px;
+      background: var(--bg-soft); border: 1px solid var(--border); color: var(--text-sub); font-weight: 700;
+    }
+    .qty-chip:hover { border-color: var(--primary); color: var(--primary-text); }
+    .stock-controls { display: flex; gap: 8px; align-items: center; }
+    .stock-controls input { width: 82px; padding: 8px 10px; text-align: center; font-weight: 700; }
+
+    /* 排行榜與追蹤卡片 */
+    .user-row {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      padding: 13px 16px; background: var(--bg-soft); border: 1px solid var(--border);
+      border-radius: 14px; margin-bottom: 10px; flex-wrap: wrap;
+    }
+    .user-row-left { display: flex; align-items: center; gap: 12px; min-width: 0; }
+    .rank-num {
+      width: 36px; height: 36px; border-radius: 10px; background: var(--primary-soft); color: var(--primary-text);
+      display: flex; align-items: center; justify-content: center; font-weight: 900; flex-shrink: 0;
+    }
+    .small-avatar { width: 46px; height: 46px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border); background: var(--bg-card); flex-shrink: 0; }
+
+    /* 消息中心 */
+    .filter-pills { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+    .pill { padding: 7px 14px; border-radius: 999px; background: var(--bg-soft); color: var(--text-sub); border: 1px solid var(--border); font-size: 0.84rem; font-weight: 700; }
+    .pill.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .msg-item {
+      padding: 15px 17px; border-radius: 14px; background: var(--bg-soft);
+      border: 1px solid var(--border); border-left: 4px solid var(--primary); margin-bottom: 10px;
+    }
+    .msg-item.type-checkin { border-left-color: var(--success); }
+    .msg-item.type-rank { border-left-color: var(--info); }
+    .msg-tag { font-size: 0.78rem; font-weight: 800; padding: 2px 9px; border-radius: 999px; background: var(--primary-soft); color: var(--primary-text); }
+    .msg-item.type-checkin .msg-tag { background: var(--success-soft); color: var(--success); }
+    .msg-item.type-rank .msg-tag { background: var(--info-soft); color: var(--info); }
+
+    /* 傳送門與活動頁 */
+    .portal-card {
+      background: var(--bg-soft); border: 1px solid var(--border);
+      border-radius: 16px; padding: 26px 20px; text-align: center;
+      display: flex; flex-direction: column; align-items: center; gap: 12px;
+      transition: transform 0.18s, border-color 0.18s;
+    }
+    .portal-card:hover { transform: translateY(-2px); border-color: var(--primary); }
+    .yt-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: #ff0000; color: #fff; text-decoration: none;
+      padding: 10px 20px; border-radius: 10px; font-weight: 800;
+    }
+    .yt-btn:hover { opacity: 0.9; }
+    .event-shell {
+      border: 1px solid var(--border); border-radius: 16px; overflow: hidden; background: var(--bg-soft);
+    }
+
+    /* 彈窗 */
+    .modal-backdrop {
+      position: fixed; inset: 0; background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(2px);
+      display: flex; align-items: center; justify-content: center; z-index: 100; padding: 16px;
+    }
+    .modal-box {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px;
+      max-width: 480px; width: 100%; max-height: 92vh; overflow-y: auto; padding: 22px; box-shadow: var(--shadow);
+    }
+    .modal-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+
+    /* 小遊戲元素 */
+    .mine-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px; max-width: 300px; margin: 12px auto; }
+    .mine-cell {
+      aspect-ratio: 1; border-radius: 8px; background: var(--bg-muted); border: 1px solid var(--border);
+      font-weight: 900; font-size: 1rem; color: var(--text-main); padding: 0;
+    }
+    .mine-cell.open { background: var(--bg-soft); }
+
+    .pipe-wrapper { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 14px 0; }
+    .pipe-endpoint { font-size: 1.4rem; display: flex; flex-direction: column; align-items: center; font-weight: 800; color: var(--info); }
+    .pipe-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; width: 268px; }
+    .pipe-cell {
+      aspect-ratio: 1; border-radius: 10px; background: var(--bg-soft); border: 2px solid var(--border);
+      padding: 0; overflow: hidden; display: flex; align-items: center; justify-content: center;
+    }
+    .pipe-cell.wet { border-color: #0ea5e9; background: rgba(14, 165, 233, 0.08); }
+    .pipe-cell.win { border-color: var(--success); background: var(--success-soft); }
+    .pipe-cell svg { width: 100%; height: 100%; display: block; }
+
+    .sort-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; margin: 10px 0; }
+    .sort-tray { display: flex; gap: 6px; justify-content: center; padding: 10px; background: var(--bg-soft); border-radius: 12px; min-height: 54px; margin-top: 10px; border: 2px dashed var(--border); }
+    .block-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 4px; max-width: 270px; margin: 10px auto; }
+    .block-cell { aspect-ratio: 1; border-radius: 6px; background: var(--bg-soft); border: 1px solid var(--border); padding: 0; }
+    .block-cell.filled { background: var(--primary); border-color: var(--primary-hover); }
+    .piece-bar { display: flex; justify-content: center; gap: 12px; margin-top: 12px; }
+    .piece-btn { padding: 10px 14px; border-radius: 12px; border: 2px solid var(--border); background: var(--bg-soft); }
+    .piece-btn.selected { border-color: var(--primary); background: var(--primary-soft); }
+
+    /* Toast */
+    #toast {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+      background: #1e293b; color: #fff; padding: 11px 22px; border-radius: 999px;
+      font-weight: 700; font-size: 0.9rem; z-index: 200; box-shadow: 0 8px 22px rgba(0,0,0,0.28);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 頂部欄 -->
+  <header>
+    <div class="brand">
+      <img src="https://seankuo0105.github.io/boar/pig4k.png" alt="山豬實行">
+      <span>山豬實行<span class="brand-sep">｜</span>會員中心</span>
+    </div>
+    <div id="header-user-bar" class="header-actions hidden">
+      <div class="points-pill">
+        <span class="material-symbols-outlined" style="font-size:18px;">monetization_on</span>
+        <span id="header-points">0</span> 點數
+      </div>
+      <button class="logout-pill" onclick="logout()">
+        <span class="material-symbols-outlined" style="font-size:18px;">logout</span> 登出
+      </button>
+    </div>
+  </header>
+
+  <!-- 1. 自動登入中畫面 -->
+  <section id="auto-login-screen" class="hidden">
+    <div class="spinner"></div>
+    <h2 style="font-weight:900; margin-bottom:8px;">自動登入中...</h2>
+    <p style="color:var(--text-sub); font-size:0.92rem;">正在連線雲端驗證帳號與密碼，請稍候 🐗</p>
+  </section>
+
+  <!-- 2. 登入 / 註冊畫面 -->
+  <section id="auth-section" class="hidden">
+    <div class="auth-header">
+      <img src="https://seankuo0105.github.io/boar/pig4k.png" alt="山豬實行">
+      <h2 style="font-weight:900; font-size:1.35rem;">歡迎來到山豬實行</h2>
+      <p style="color:var(--text-sub); font-size:0.88rem; margin-top:5px;">登入賺取點數、暢玩小遊戲與衝刺全球排行</p>
+    </div>
+
+    <div id="auth-alert" class="alert-box hidden"></div>
+
+    <div class="auth-tabs">
+      <button id="tab-btn-login" class="auth-tab active" onclick="switchAuthMode('login')">會員登入</button>
+      <button id="tab-btn-register" class="auth-tab" onclick="switchAuthMode('register')">註冊新帳號</button>
+    </div>
+
+    <form id="login-form" onsubmit="submitLogin(event)">
+      <div class="form-group">
+        <label>帳號（不分大小寫）</label>
+        <input id="login-user" type="text" required placeholder="請輸入帳號">
+      </div>
+      <div class="form-group">
+        <label>密碼</label>
+        <input id="login-pass" type="password" required placeholder="請輸入密碼">
+      </div>
+      <button id="login-submit" class="btn-primary" style="width:100%;" type="submit">
+        <span class="material-symbols-outlined">login</span> 立即登入
+      </button>
+    </form>
+
+    <form id="register-form" class="hidden" onsubmit="submitRegister(event)">
+      <div class="form-group">
+        <label>設定帳號（英數底線，不分大小寫不可重複）</label>
+        <input id="reg-user" type="text" required placeholder="例如：boar_king">
+      </div>
+      <div class="form-group">
+        <label>設定顯示名稱</label>
+        <input id="reg-name" type="text" required placeholder="大家看到的暱稱">
+      </div>
+      <div class="form-group">
+        <label>設定密碼（至少 4 字）</label>
+        <input id="reg-pass" type="password" required minlength="4" placeholder="請設定密碼">
+      </div>
+      <div class="form-group">
+        <label>確認密碼</label>
+        <input id="reg-pass2" type="password" required minlength="4" placeholder="再輸入一次密碼">
+      </div>
+      <button id="reg-submit" class="btn-primary" style="width:100%;" type="submit">
+        <span class="material-symbols-outlined">person_add</span> 免費註冊領 100 點數
+      </button>
+    </form>
+  </section>
+
+  <!-- 3. 主系統畫面 -->
+  <main id="app-section" class="hidden">
+    <!-- 左側名片與導覽選單 -->
+    <aside>
+      <div class="card profile-card">
+        <img id="side-avatar" class="profile-avatar" src="" alt="頭像">
+        <h3 id="side-name" style="font-weight:900; font-size:1.12rem;">載入中...</h3>
+        <div><span id="side-title" class="title-badge">初階小野豬</span></div>
+        <p style="color:var(--text-sub); font-size:0.84rem; margin-bottom:14px;">
+          帳號：<span id="side-username">-</span>
+        </p>
+        <button id="checkin-btn" class="btn-primary" style="width:100%;" onclick="doCheckin()">
+          <span class="material-symbols-outlined">event_available</span> 每日簽到 (+50)
+        </button>
+      </div>
+
+      <div class="card menu-card">
+        <div class="nav-list">
+          <!-- 原有 5 個標籤（維持原有名稱與圖示） -->
+          <button class="nav-btn active" data-tab="games" onclick="switchTab('games')">
+            <span class="material-symbols-outlined">sports_esports</span> 遊樂場賺點 (5款)
+          </button>
+          <button class="nav-btn" data-tab="gacha" onclick="switchTab('gacha')">
+            <span class="material-symbols-outlined">casino</span> 實境轉蛋 & 雙倍豪賭
+          </button>
+          <button class="nav-btn" data-tab="leaderboard" onclick="switchTab('leaderboard')">
+            <span class="material-symbols-outlined">leaderboard</span> 全球點數排行榜
+          </button>
+          <button class="nav-btn" data-tab="settings" onclick="switchTab('settings')">
+            <span class="material-symbols-outlined">settings</span> 個人設定 (改名/頭像/密碼)
+          </button>
+          <button class="nav-btn" data-tab="feedback" onclick="switchTab('feedback')">
+            <span class="material-symbols-outlined">mail</span> 發送意見回饋
+          </button>
+
+          <div class="nav-divider"></div>
+          <div class="nav-group-label">全新功能</div>
+
+          <!-- 新增優化 5 個標籤 -->
+          <button class="nav-btn" data-tab="stocks" onclick="switchTab('stocks')">
+            <span class="material-symbols-outlined">candlestick_chart</span> 山豬股市系統
+          </button>
+          <button class="nav-btn" data-tab="event" onclick="switchTab('event')">
+            <span class="material-symbols-outlined">celebration</span> 活動專區
+          </button>
+          <button class="nav-btn" data-tab="follow" onclick="switchTab('follow')">
+            <span class="material-symbols-outlined">group</span> 追蹤中心
+          </button>
+          <button class="nav-btn" data-tab="messages" onclick="switchTab('messages')">
+            <span class="material-symbols-outlined">notifications</span> 消息中心
+          </button>
+          <button class="nav-btn" data-tab="portal" onclick="switchTab('portal')">
+            <span class="material-symbols-outlined">explore</span> 傳送門
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- 右側主內容卡 -->
+    <section class="card" style="min-height:560px;">
+      <!-- 分頁 1：遊樂場（維持原版排版） -->
+      <div id="tab-games" class="tab-panel">
+        <h2 class="section-title"><span class="material-symbols-outlined">sports_esports</span> 會員專屬賺點遊樂場</h2>
+        <p class="section-sub">挑戰小遊戲賺取點數，每款遊戲每小時可領取一次獎勵。過關由雲端自動審核防作弊！</p>
+        <div id="games-grid" class="grid-3"></div>
+      </div>
+
+      <!-- 分頁 2：實境轉蛋 & 雙倍豪賭（稱號改用下拉選單呈現） -->
+      <div id="tab-gacha" class="tab-panel hidden">
+        <h2 class="section-title"><span class="material-symbols-outlined">casino</span> 實境轉蛋 & 雙倍豪賭</h2>
+        <p class="section-sub">收集稀有稱號裝備炫耀，或挑戰心跳加速的雙倍豪賭！</p>
+        <div class="grid-2">
+          <div class="stock-card">
+            <h3 style="font-weight:900;">🎁 稱號轉蛋機（100 點/次）</h3>
+            <p style="font-size:0.86rem; color:var(--text-sub); line-height:1.5;">抽中重複稱號自動退還 30 點，最高可抽中【SSR】傳說黃金神豬！</p>
+            <button id="gacha-btn" class="btn-primary" onclick="doGacha()">立即抽獎 (-100 點)</button>
+
+            <div style="margin-top:6px; padding-top:12px; border-top:1px solid var(--border);">
+              <label for="title-select">切換已擁有稱號（共 <span id="title-count">1</span> 個）：</label>
+              <div style="display:flex; gap:8px; align-items:center;">
+                <select id="title-select" style="flex:1;"></select>
+                <button id="equip-title-btn" class="btn-primary btn-sm" style="flex-shrink:0; padding:10px 14px;" onclick="equipSelectedTitle()">套用稱號</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="stock-card">
+            <h3 style="font-weight:900;">🔥 雙倍或全無豪賭</h3>
+            <p style="font-size:0.86rem; color:var(--text-sub); line-height:1.5;">輸入下注點數，成功直接翻倍，失敗歸零！請理性下注 🐗</p>
+            <div class="form-group" style="margin-bottom:4px;">
+              <label>下注點數（最低 10 點）</label>
+              <input id="wager-amount" type="number" min="10" value="50">
+            </div>
+            <button id="wager-btn" class="btn-danger" onclick="doWager()">All-in / 立即下注！</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 分頁 3：全球點數排行榜 (限制前 10 位) -->
+      <div id="tab-leaderboard" class="tab-panel hidden">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:16px;">
+          <div>
+            <h2 class="section-title" style="margin-bottom:4px;"><span class="material-symbols-outlined">leaderboard</span> 全球點數排行榜</h2>
+            <p class="section-sub" style="margin-bottom:0;">僅顯示前 10 名大佬｜你目前排名：<strong id="lb-my-rank">#-</strong></p>
+          </div>
+          <button class="btn-soft btn-sm" onclick="loadLeaderboard()">
+            <span class="material-symbols-outlined" style="font-size:17px;">refresh</span> 重新整理
+          </button>
+        </div>
+        <div id="leaderboard-list">載入中...</div>
+      </div>
+
+      <!-- 分頁 4：個人設定 (改名/頭像/密碼 + 支援上傳壓縮與網址) -->
+      <div id="tab-settings" class="tab-panel hidden">
+        <h2 class="section-title"><span class="material-symbols-outlined">settings</span> 個人設定 (改名/頭像/密碼)</h2>
+        <p class="section-sub">支援直接上傳圖片（自動合理壓縮為 160×160 JPG）或貼上圖片網址變更頭像。</p>
+
+        <div style="display:flex; align-items:center; gap:16px; margin-bottom:18px; flex-wrap:wrap;">
+          <img id="set-avatar-preview" class="profile-avatar" style="margin:0;" src="" alt="預覽頭像">
+          <div>
+            <div id="avatar-compress-info" style="font-size:0.85rem; color:var(--text-sub); margin-bottom:8px;">目前頭像預覽</div>
+            <button type="button" class="btn-soft btn-sm" onclick="resetDefaultAvatar()">恢復預設頭像</button>
+          </div>
+        </div>
+
+        <form onsubmit="saveSettings(event)">
+          <div class="form-group">
+            <label>顯示名稱</label>
+            <input id="set-name" type="text" required maxlength="20">
+          </div>
+          <div class="form-group">
+            <label>方式一：直接上傳頭像圖片（自動壓縮像素）</label>
+            <input id="set-avatar-file" type="file" accept="image/*" onchange="handleAvatarFile(event)">
+          </div>
+          <div class="form-group">
+            <label>方式二：或貼上頭像圖片網址</label>
+            <input id="set-avatar-url" type="text" placeholder="https://..." oninput="handleAvatarUrlInput(this.value)">
+          </div>
+          <div class="form-group">
+            <label>修改密碼（若不修改請留空；修改後其他裝置將視為登入失敗並登出）</label>
+            <input id="set-new-pass" type="password" minlength="4" placeholder="輸入新密碼（至少 4 字）">
+          </div>
+          <button id="save-settings-btn" class="btn-primary" type="submit">儲存設定</button>
+        </form>
+      </div>
+
+      <!-- 分頁 5：發送意見回饋 -->
+      <div id="tab-feedback" class="tab-panel hidden">
+        <h2 class="section-title"><span class="material-symbols-outlined">mail</span> 發送意見回饋</h2>
+        <p class="section-sub">有什麼好玩的新點子、Bug 回報或建議，直接傳給站長吧！</p>
+        <form onsubmit="submitFeedback(event)">
+          <div class="form-group">
+            <label>回饋內容</label>
+            <textarea id="fb-content" rows="5" required placeholder="請輸入你想說的話..."></textarea>
+          </div>
+          <button class="btn-primary" type="submit">送出回饋</button>
+        </form>
+      </div>
+
+      <!-- 分頁 6：山豬股市系統（優化版） -->
+      <div id="tab-stocks" class="tab-panel hidden">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:16px;">
+          <div>
+            <h2 class="section-title" style="margin-bottom:4px;"><span class="material-symbols-outlined">candlestick_chart</span> 山豬股市系統</h2>
+            <p class="section-sub" style="margin-bottom:0;">三大數學模型即時運算（每 5 分鐘跳動一次，不消耗表單額度）</p>
+          </div>
+          <button class="btn-soft btn-sm" onclick="loadStockData()">
+            <span class="material-symbols-outlined" style="font-size:17px;">refresh</span> 同步庫存
+          </button>
+        </div>
+
+        <div class="summary-strip">
+          <div class="summary-tile">
+            <div class="summary-label">可用點數</div>
+            <div class="summary-val" id="stock-cash">0 點</div>
+          </div>
+          <div class="summary-tile">
+            <div class="summary-label">持股總市值</div>
+            <div class="summary-val" id="stock-total-value" style="color:var(--primary);">0 點</div>
+          </div>
+          <div class="summary-tile">
+            <div class="summary-label">下次股價更新倒數</div>
+            <div class="summary-val" id="stock-countdown">--:--</div>
+          </div>
+        </div>
+
+        <div id="stocks-container" class="grid-2"></div>
+      </div>
+
+      <!-- 分頁 7：活動專區（優化版） -->
+      <div id="tab-event" class="tab-panel hidden">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:14px;">
+          <div>
+            <h2 class="section-title" style="margin-bottom:4px;"><span class="material-symbols-outlined">celebration</span> 活動專區</h2>
+            <p class="section-sub" style="margin-bottom:0;">即時載入《山豬實行》官方最新限定活動資訊</p>
+          </div>
+          <div style="display:flex; gap:8px;">
+            <button class="btn-soft btn-sm" onclick="reloadEventFrame()">
+              <span class="material-symbols-outlined" style="font-size:17px;">refresh</span> 重新載入
+            </button>
+            <a class="btn btn-soft btn-sm" style="text-decoration:none;" href="https://seankuo0105.github.io/app/event.html" target="_blank" rel="noopener">新分頁開啟</a>
+          </div>
+        </div>
+        <div class="event-shell">
+          <iframe id="event-iframe" src="https://seankuo0105.github.io/app/event.html"
+            style="width:100%; height:66vh; min-height:460px; border:none; display:block;"></iframe>
+        </div>
+      </div>
+
+      <!-- 分頁 8：追蹤中心（優化版） -->
+      <div id="tab-follow" class="tab-panel hidden">
+        <h2 class="section-title"><span class="material-symbols-outlined">group</span> 追蹤中心</h2>
+        <p class="section-sub">輸入帳號 ID（不分大小寫）即可追蹤，隨時查看好友稱號、頭像、點數與真實排名（即使不在前十名）！</p>
+        <div style="display:flex; gap:10px; margin-bottom:18px;">
+          <input id="follow-input" type="text" placeholder="請輸入要追蹤的帳號 ID">
+          <button class="btn-primary" style="flex-shrink:0;" onclick="doFollow()">
+            <span class="material-symbols-outlined">person_add</span> 加入追蹤
+          </button>
+        </div>
+        <div id="following-list">載入中...</div>
+      </div>
+
+      <!-- 分頁 9：消息中心（優化版） -->
+      <div id="tab-messages" class="tab-panel hidden">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:12px;">
+          <div>
+            <h2 class="section-title" style="margin-bottom:4px;"><span class="material-symbols-outlined">notifications</span> 消息中心</h2>
+            <p class="section-sub" style="margin-bottom:0;">集中接收官方公告、追蹤者簽到動態與排行上升通知</p>
+          </div>
+          <button class="btn-soft btn-sm" onclick="loadMessages()">
+            <span class="material-symbols-outlined" style="font-size:17px;">refresh</span> 更新消息
+          </button>
+        </div>
+        <div class="filter-pills">
+          <button class="pill active" onclick="setMsgFilter('all', this)">全部消息</button>
+          <button class="pill" onclick="setMsgFilter('announce', this)">📢 官方公告</button>
+          <button class="pill" onclick="setMsgFilter('checkin', this)">✅ 追蹤者簽到</button>
+          <button class="pill" onclick="setMsgFilter('rank', this)">📈 排行上升</button>
+        </div>
+        <div id="messages-list">載入中...</div>
+      </div>
+
+      <!-- 分頁 10：傳送門（優化版） -->
+      <div id="tab-portal" class="tab-panel hidden">
+        <h2 class="section-title"><span class="material-symbols-outlined">explore</span> 傳送門</h2>
+        <p class="section-sub">一鍵直達《山豬實行》官方社群與頻道，掌握最新消息！</p>
+        <div class="grid-2">
+          <div class="portal-card">
+            <div style="font-size:2.6rem;">💬</div>
+            <h3 style="font-weight:900;">LINE 官方帳號</h3>
+            <p style="font-size:0.88rem; color:var(--text-sub);">加入好友接收最新活動推播與限定福利！</p>
+            <a href="https://lin.ee/rxn1Rxg" target="_blank" rel="noopener noreferrer"><img src="https://scdn.line-apps.com/n/line_add_friends/btn/zh-Hant.png" alt="加入好友" height="36" border="0"></a>
+          </div>
+          <div class="portal-card">
+            <div style="font-size:2.6rem;">🎬</div>
+            <h3 style="font-weight:900;">YouTube 官方頻道</h3>
+            <p style="font-size:0.88rem; color:var(--text-sub);">訂閱《山豬實行》，搶先看最新影片與 Shorts！</p>
+            <a class="yt-btn" href="http://www.youtube.com/@seankuo0105wildboar" target="_blank" rel="noopener noreferrer">
+              <span class="material-symbols-outlined">play_circle</span> 前往 YouTube 頻道
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 彈窗（小遊戲 / 檢舉） -->
+  <div id="modal" class="modal-backdrop hidden">
+    <div class="modal-box">
+      <div class="modal-head">
+        <h3 id="modal-title" style="font-weight:900;">標題</h3>
+        <button class="btn-soft btn-sm" onclick="closeModal()">關閉</button>
+      </div>
+      <div id="modal-body"></div>
+    </div>
+  </div>
+
+  <div id="toast" class="hidden"></div>
+
+  <script>
+    // ==========================================
+    // 狀態管理與雲端通訊
+    // ==========================================
+    const STORAGE_SESSION = 'boar_session_v2';
+    const STORAGE_RANK_LOG = 'boar_rank_logs_';
+    const STORAGE_FOLLOW_RANKS = 'boar_follow_ranks_';
+    const STOCK_SLOT_MS = 5 * 60 * 1000;
+    const COOLDOWN_MS = 60 * 60 * 1000;
+
+    let session = null;
+    let currentUser = null;
+    let serverOffsetMs = 0;
+    let pendingAvatarData = '';
+    let allMessagesCache = [];
+    let currentMsgFilter = 'all';
+    let stockTimer = null;
+    let gameLoopId = null;
+
+    function nowServer() { return Date.now() + serverOffsetMs; }
+    function getDefaultAvatar(u) { return 'https://api.dicebear.com/10.x/shadows/svg?seed=' + encodeURIComponent(u); }
+
+    function normalizeTitles(ownedRaw, currentTitle) {
+      let arr = [];
+      if (Array.isArray(ownedRaw)) {
+        arr = ownedRaw;
+      } else if (typeof ownedRaw === 'string' && ownedRaw.trim()) {
+        try {
+          const p = JSON.parse(ownedRaw);
+          arr = Array.isArray(p) ? p : [String(p)];
+        } catch (_) {
+          arr = ownedRaw.replace(/^\[|\]$/g, '').split(/[,，、;\n]+/);
+        }
+      }
+      const clean = [];
+      const add = v => {
+        const s = String(v || '').replace(/^["']|["']$/g, '').trim();
+        if (s && !clean.includes(s)) clean.push(s);
+      };
+      add(currentTitle);
+      arr.forEach(add);
+      if (!clean.length) add('初階小野豬');
+      return clean;
+    }
+
+    function escapeHtml(s) {
+      return String(s || '').replace(/[&<>"']/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m]));
+    }
+
+    function showToast(msg) {
+      const el = document.getElementById('toast');
+      el.textContent = msg;
+      el.classList.remove('hidden');
+      clearTimeout(el._t);
+      el._t = setTimeout(() => el.classList.add('hidden'), 3000);
+    }
+
+    async function api(action, payload = {}) {
+      const body = Object.assign({ action }, session || {}, payload);
+      const res = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(body)
+      });
+      const data = await res.json();
+      if (data.serverTime) serverOffsetMs = data.serverTime - Date.now();
+      if (data.authFailed && currentUser) {
+        forceLogoutWithNotice('登入驗證失敗（可能已於其他裝置修改密碼），請重新登入！');
+      }
+      return data;
+    }
+
+    // ==========================================
+    // 啟動與自動登入流程
+    // ==========================================
+    window.addEventListener('DOMContentLoaded', async () => {
+      const saved = localStorage.getItem(STORAGE_SESSION);
+      if (saved) {
+        try {
+          session = JSON.parse(saved);
+          if (session && session.username && session.password) {
+            document.getElementById('auto-login-screen').classList.remove('hidden');
+            const res = await api('login');
+            document.getElementById('auto-login-screen').classList.add('hidden');
+            if (res.success) {
+              enterApp(res.user);
+              return;
+            } else {
+              localStorage.removeItem(STORAGE_SESSION);
+              session = null;
+              showAuthScreen('自動登入失敗（帳號密碼錯誤或已於其他裝置修改密碼），請重新登入！');
+              return;
+            }
+          }
+        } catch (_) {
+          document.getElementById('auto-login-screen').classList.add('hidden');
+          showAuthScreen('無法連線至雲端驗證，請檢查網路後重新登入。');
+          return;
+        }
+      }
+      showAuthScreen();
+    });
+
+    function showAuthScreen(errorMsg) {
+      document.getElementById('app-section').classList.add('hidden');
+      document.getElementById('header-user-bar').classList.add('hidden');
+      document.getElementById('auth-section').classList.remove('hidden');
+      const alertEl = document.getElementById('auth-alert');
+      if (errorMsg) {
+        alertEl.textContent = errorMsg;
+        alertEl.classList.remove('hidden');
+      } else {
+        alertEl.classList.add('hidden');
+      }
+    }
+
+    function switchAuthMode(mode) {
+      document.getElementById('auth-alert').classList.add('hidden');
+      document.getElementById('tab-btn-login').classList.toggle('active', mode === 'login');
+      document.getElementById('tab-btn-register').classList.toggle('active', mode === 'register');
+      document.getElementById('login-form').classList.toggle('hidden', mode !== 'login');
+      document.getElementById('register-form').classList.toggle('hidden', mode !== 'register');
+    }
+
+    async function submitLogin(e) {
+      e.preventDefault();
+      const btn = document.getElementById('login-submit');
+      btn.disabled = true; btn.textContent = '登入中...';
+      try {
+        session = {
+          username: document.getElementById('login-user').value.trim(),
+          password: document.getElementById('login-pass').value
+        };
+        const res = await api('login');
+        if (res.success) {
+          session.username = res.user.username;
+          localStorage.setItem(STORAGE_SESSION, JSON.stringify(session));
+          enterApp(res.user);
+        } else {
+          session = null;
+          showAuthScreen(res.message || '帳號或密碼錯誤');
+        }
+      } catch (_) {
+        showAuthScreen('連線失敗，請稍後再試');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<span class="material-symbols-outlined">login</span> 立即登入';
+      }
+    }
+
+    async function submitRegister(e) {
+      e.preventDefault();
+      const u = document.getElementById('reg-user').value.trim();
+      const n = document.getElementById('reg-name').value.trim();
+      const p1 = document.getElementById('reg-pass').value;
+      const p2 = document.getElementById('reg-pass2').value;
+      if (p1 !== p2) return showAuthScreen('兩次輸入的密碼不一致！');
+
+      const btn = document.getElementById('reg-submit');
+      btn.disabled = true; btn.textContent = '註冊中...';
+      try {
+        const res = await api('register', { username: u, name: n, password: p1 });
+        if (res.success) {
+          session = { username: res.user.username, password: p1 };
+          localStorage.setItem(STORAGE_SESSION, JSON.stringify(session));
+          showToast(res.message);
+          enterApp(res.user);
+        } else {
+          showAuthScreen(res.message || '註冊失敗');
+        }
+      } catch (_) {
+        showAuthScreen('連線失敗，請稍後再試');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<span class="material-symbols-outlined">person_add</span> 免費註冊領 100 點數';
+      }
+    }
+
+    function logout() {
+      localStorage.removeItem(STORAGE_SESSION);
+      session = null;
+      currentUser = null;
+      clearInterval(stockTimer);
+      showAuthScreen();
+      showToast('已登出帳號');
+    }
+
+    function forceLogoutWithNotice(msg) {
+      localStorage.removeItem(STORAGE_SESSION);
+      session = null;
+      currentUser = null;
+      clearInterval(stockTimer);
+      showAuthScreen(msg);
+    }
+
+    function enterApp(user) {
+      currentUser = user;
+      currentUser.ownedTitles = normalizeTitles(user.ownedTitles, user.title);
+      document.getElementById('auth-section').classList.add('hidden');
+      document.getElementById('auto-login-screen').classList.add('hidden');
+      document.getElementById('header-user-bar').classList.remove('hidden');
+      document.getElementById('app-section').classList.remove('hidden');
+      renderUserUI();
+      renderGamesGrid();
+      startStockCountdown();
+      switchTab('games');
+    }
+
+    function renderUserUI() {
+      if (!currentUser) return;
+      const av = currentUser.avatar || getDefaultAvatar(currentUser.username);
+      const titles = normalizeTitles(currentUser.ownedTitles, currentUser.title);
+      currentUser.ownedTitles = titles;
+
+      document.getElementById('header-points').textContent = currentUser.points;
+      document.getElementById('side-avatar').src = av;
+      document.getElementById('side-name').textContent = currentUser.name;
+      document.getElementById('side-title').textContent = currentUser.title || titles[0];
+      document.getElementById('side-username').textContent = currentUser.username;
+
+      // 簽到按鈕（維持原版狀態樣式）
+      const chkBtn = document.getElementById('checkin-btn');
+      if (currentUser.checkedInToday) {
+        chkBtn.disabled = true;
+        chkBtn.className = 'btn-muted';
+        chkBtn.innerHTML = '<span class="material-symbols-outlined">check_circle</span> 今日已簽到';
+      } else {
+        chkBtn.disabled = false;
+        chkBtn.className = 'btn-primary';
+        chkBtn.innerHTML = '<span class="material-symbols-outlined">event_available</span> 每日簽到 (+50)';
+      }
+
+      // 稱號下拉選單（以 DOM option 建立，徹底杜絕介面跑版與特殊字元 Bug）
+      const sel = document.getElementById('title-select');
+      sel.innerHTML = '';
+      titles.forEach(t => {
+        const opt = document.createElement('option');
+        opt.value = t;
+        opt.textContent = (t === currentUser.title ? '✔ ' : '') + t;
+        if (t === currentUser.title) opt.selected = true;
+        sel.appendChild(opt);
+      });
+      document.getElementById('title-count').textContent = titles.length;
+
+      // 設定頁預填
+      document.getElementById('set-name').value = currentUser.name;
+      document.getElementById('set-avatar-preview').src = av;
+      document.getElementById('set-avatar-url').value = av.startsWith('data:') ? '' : av;
+      pendingAvatarData = av;
+    }
+
+    function switchTab(tab) {
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.add('hidden'));
+      document.getElementById('tab-' + tab).classList.remove('hidden');
+
+      if (tab === 'games') renderGamesGrid();
+      if (tab === 'stocks') { renderStocks(); loadStockData(); }
+      if (tab === 'leaderboard') loadLeaderboard();
+      if (tab === 'follow') loadFollowing();
+      if (tab === 'messages') loadMessages();
+    }
+
+    function reloadEventFrame() {
+      const f = document.getElementById('event-iframe');
+      f.src = 'https://seankuo0105.github.io/app/event.html?t=' + Date.now();
+    }
+
+    // ==========================================
+    // 每日簽到、轉蛋、稱號選單切換、雙倍豪賭
+    // ==========================================
+    async function doCheckin() {
+      const btn = document.getElementById('checkin-btn');
+      btn.disabled = true;
+      const res = await api('checkin');
+      showToast(res.message);
+      if (res.success) {
+        currentUser.points = res.points;
+        currentUser.checkedInToday = true;
+      }
+      renderUserUI();
+    }
+
+    async function doGacha() {
+      const btn = document.getElementById('gacha-btn');
+      btn.disabled = true;
+      try {
+        const res = await api('gacha');
+        showToast(res.message);
+        if (res.success) {
+          currentUser.points = res.points;
+          currentUser.ownedTitles = normalizeTitles(res.ownedTitles, currentUser.title);
+          renderUserUI();
+        }
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    async function equipSelectedTitle() {
+      const sel = document.getElementById('title-select');
+      const chosen = sel.value;
+      if (!chosen) return;
+      const btn = document.getElementById('equip-title-btn');
+      btn.disabled = true;
+      try {
+        const res = await api('equipTitle', { title: chosen });
+        showToast(res.message);
+        if (res.success) {
+          currentUser.title = res.title;
+          if (res.ownedTitles) currentUser.ownedTitles = normalizeTitles(res.ownedTitles, res.title);
+          renderUserUI();
+        }
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    async function doWager() {
+      const amount = Number(document.getElementById('wager-amount').value);
+      const btn = document.getElementById('wager-btn');
+      btn.disabled = true;
+      try {
+        const res = await api('wager', { amount });
+        showToast(res.message);
+        if (res.success) {
+          currentUser.points = res.points;
+          renderUserUI();
+        }
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    // ==========================================
+    // 山豬股市系統 (前後端同步公式)
+    // ==========================================
+    function hash01(n) {
+      let x = (n | 0) ^ 0x9e3779b9;
+      x = Math.imul(x ^ (x >>> 16), 0x85ebca6b);
+      x = Math.imul(x ^ (x >>> 13), 0xc2b2ae35);
+      x = (x ^ (x >>> 16)) >>> 0;
+      return x / 4294967296;
+    }
+
+    function getStockPricesAt(t) {
+      // 1. 地瓜生技：多重波浪疊加 (×1)
+      const tWave = t % 100000;
+      const raw1 = 100 + 22 * Math.sin(0.1 * tWave) + 14 * Math.sin(0.37 * tWave) + 9 * Math.cos(0.73 * tWave);
+      const p1 = Math.max(10, Math.round(raw1)) * 1;
+
+      // 2. 山豬機電：每日隨機漫步 (×2)
+      const twSlot = t + 96;
+      const dayIndex = Math.floor(twSlot / 288);
+      const stepInDay = ((twSlot % 288) + 288) % 288;
+      let base2 = 100;
+      for (let s = 1; s <= stepInDay; s++) {
+        const r = hash01(dayIndex * 1009 + s * 37);
+        base2 = base2 * (1 + (r - 0.5) * 0.08);
+        if (base2 < 25) base2 = 25;
+        if (base2 > 300) base2 = 300;
+      }
+      const p2 = Math.round(base2) * 2;
+
+      // 3. 山豬實行：雜湊暴衝 (×3)
+      const r3 = hash01(t * 2654435761 + 777);
+      let base3 = 60 + r3 * 80;
+      let event3 = '';
+      if (r3 > 0.95) { base3 *= 1.3; event3 = '🌟 神豬顯靈 +30%'; }
+      else if (r3 < 0.05) { base3 *= 0.7; event3 = '🔥 地瓜燒焦 -30%'; }
+      const p3 = Math.max(15, Math.round(base3)) * 3;
+
+      return [
+        { id: 'sweet_potato', name: '🍠 地瓜生技', desc: '波浪穩健模型（單價 ×1）', price: p1, event: '' },
+        { id: 'boar_elec',    name: '⚡ 山豬機電', desc: '每日隨機漫步（單價 ×2）', price: p2, event: '' },
+        { id: 'boar_exec',    name: '🐗 山豬實行', desc: '雜湊暴衝妖股（單價 ×3）', price: p3, event: event3 }
+      ];
+    }
+
+    function buildSparklineSVG(stockId, curT) {
+      const pts = [];
+      for (let i = 19; i >= 0; i--) {
+        const arr = getStockPricesAt(curT - i);
+        pts.push(arr.find(s => s.id === stockId).price);
+      }
+      const min = Math.min(...pts) - 5;
+      const max = Math.max(...pts) + 5;
+      const span = Math.max(1, max - min);
+      const coords = pts.map((v, i) => {
+        const x = (i / (pts.length - 1)) * 284 + 8;
+        const y = 60 - ((v - min) / span) * 52;
+        return `${x.toFixed(1)},${y.toFixed(1)}`;
+      }).join(' ');
+      const up = pts[pts.length - 1] >= pts[pts.length - 2];
+      const color = up ? '#ef4444' : '#10b981';
+      return `<svg class="sparkline" viewBox="0 0 300 68" preserveAspectRatio="none">
+        <polyline fill="none" stroke="${color}" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" points="${coords}" />
+      </svg>`;
+    }
+
+    function setQuickQty(stockId, val) {
+      const el = document.getElementById('qty-' + stockId);
+      if (el) el.value = Math.max(1, Math.floor(val));
+    }
+
+    function renderStocks() {
+      const curT = Math.floor(nowServer() / STOCK_SLOT_MS);
+      const curList = getStockPricesAt(curT);
+      const prevList = getStockPricesAt(curT - 1);
+      const holdings = (currentUser && currentUser.stocks) || {};
+      const cash = currentUser ? currentUser.points : 0;
+
+      let totalVal = 0;
+      curList.forEach(s => { totalVal += (Number(holdings[s.id]) || 0) * s.price; });
+      document.getElementById('stock-cash').textContent = cash + ' 點';
+      document.getElementById('stock-total-value').textContent = totalVal + ' 點';
+
+      document.getElementById('stocks-container').innerHTML = curList.map((s, idx) => {
+        const prev = prevList[idx].price;
+        const diff = s.price - prev;
+        const pct = ((diff / prev) * 100).toFixed(1);
+        const owned = Number(holdings[s.id]) || 0;
+        const maxBuy = Math.max(1, Math.floor(cash / s.price));
+        const diffHtml = diff >= 0
+          ? `<span class="stock-delta-up">▲ +${diff} (+${pct}%)</span>`
+          : `<span class="stock-delta-down">▼ ${diff} (${pct}%)</span>`;
+
+        return `<div class="stock-card">
+          <div class="stock-top">
+            <div>
+              <h3 style="font-weight:900; font-size:1.08rem;">${s.name}</h3>
+              <p style="font-size:0.8rem; color:var(--text-sub);">${s.desc}</p>
+              ${s.event ? `<span class="title-badge" style="margin-top:6px;">${s.event}</span>` : ''}
+            </div>
+            <div style="text-align:right;">
+              <div class="stock-price">${s.price} 點</div>
+              ${diffHtml}
+            </div>
+          </div>
+          ${buildSparklineSVG(s.id, curT)}
+          <div style="display:flex; justify-content:space-between; font-size:0.85rem; color:var(--text-sub);">
+            <span>持有：<strong>${owned}</strong> 股</span>
+            <span>市值：<strong>${owned * s.price}</strong> 點</span>
+          </div>
+          <div class="quick-qty">
+            <button type="button" class="qty-chip" onclick="setQuickQty('${s.id}', 1)">1股</button>
+            <button type="button" class="qty-chip" onclick="setQuickQty('${s.id}', 5)">5股</button>
+            <button type="button" class="qty-chip" onclick="setQuickQty('${s.id}', 10)">10股</button>
+            <button type="button" class="qty-chip" onclick="setQuickQty('${s.id}', ${maxBuy})">可買最大(${maxBuy})</button>
+            ${owned > 0 ? `<button type="button" class="qty-chip" onclick="setQuickQty('${s.id}', ${owned})">全賣(${owned})</button>` : ''}
+          </div>
+          <div class="stock-controls">
+            <input id="qty-${s.id}" type="number" min="1" value="1">
+            <button class="btn-primary btn-sm" style="flex:1; padding:9px;" onclick="tradeStock('${s.id}','buy')">買進</button>
+            <button class="btn-danger btn-sm" style="flex:1; padding:9px;" onclick="tradeStock('${s.id}','sell')">賣出</button>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    async function loadStockData() {
+      const res = await api('getStockData');
+      if (res.success) {
+        currentUser.points = res.points;
+        currentUser.stocks = res.stocks;
+        renderUserUI();
+        renderStocks();
+      }
+    }
+
+    async function tradeStock(stockId, side) {
+      const qty = Number(document.getElementById('qty-' + stockId).value);
+      const res = await api('tradeStock', { stockId, side, qty });
+      showToast(res.message);
+      if (res.success) {
+        currentUser.points = res.points;
+        currentUser.stocks = res.stocks;
+        renderUserUI();
+        renderStocks();
+      }
+    }
+
+    function startStockCountdown() {
+      clearInterval(stockTimer);
+      let lastSlot = Math.floor(nowServer() / STOCK_SLOT_MS);
+      stockTimer = setInterval(() => {
+        const ms = nowServer();
+        const slot = Math.floor(ms / STOCK_SLOT_MS);
+        const remain = STOCK_SLOT_MS - (ms % STOCK_SLOT_MS);
+        const m = String(Math.floor(remain / 60000)).padStart(2, '0');
+        const s = String(Math.floor((remain % 60000) / 1000)).padStart(2, '0');
+        const el = document.getElementById('stock-countdown');
+        if (el) el.textContent = `${m}:${s}`;
+        if (slot !== lastSlot) {
+          lastSlot = slot;
+          if (!document.getElementById('tab-stocks').classList.contains('hidden')) renderStocks();
+        }
+      }, 1000);
+    }
+
+    // ==========================================
+    // 排行榜 (限制前 10 位)
+    // ==========================================
+    async function loadLeaderboard() {
+      const box = document.getElementById('leaderboard-list');
+      box.innerHTML = '載入中...';
+      const res = await api('leaderboard');
+      if (!res.success) return box.innerHTML = '載入失敗';
+      currentUser.rank = res.myRank;
+      document.getElementById('lb-my-rank').textContent = '#' + (res.myRank || '-');
+
+      box.innerHTML = res.leaderboard.map(u => `
+        <div class="user-row">
+          <div class="user-row-left">
+            <div class="rank-num">${u.rank <= 3 ? ['🥇','🥈','🥉'][u.rank - 1] : '#' + u.rank}</div>
+            <img class="small-avatar" src="${escapeHtml(u.avatar)}" alt="">
+            <div>
+              <div style="font-weight:800;">${escapeHtml(u.name)} <span class="title-badge" style="margin:0 0 0 6px;">${escapeHtml(u.title)}</span></div>
+              <div style="font-size:0.8rem; color:var(--text-sub);">@${escapeHtml(u.username)}</div>
+            </div>
+          </div>
+          <div style="font-weight:900; color:var(--primary); font-size:1.05rem;">${u.points} 點</div>
+        </div>
+      `).join('') || '<p style="color:var(--text-sub);">尚無排行資料</p>';
+    }
+
+    // ==========================================
+    // 追蹤中心
+    // ==========================================
+    async function loadFollowing() {
+      const box = document.getElementById('following-list');
+      box.innerHTML = '載入中...';
+      const res = await api('getFollowing');
+      if (!res.success) return box.innerHTML = '載入失敗';
+      renderFollowingList(res.following);
+    }
+
+    function renderFollowingList(list) {
+      const box = document.getElementById('following-list');
+      if (!list || !list.length) {
+        box.innerHTML = '<p style="color:var(--text-sub);">尚未追蹤任何帳號，輸入上方帳號 ID 開始追蹤吧！</p>';
+        return;
+      }
+      box.innerHTML = list.map(u => `
+        <div class="user-row">
+          <div class="user-row-left">
+            <img class="small-avatar" src="${escapeHtml(u.avatar)}" alt="">
+            <div>
+              <div style="font-weight:800;">${escapeHtml(u.name)} <span class="title-badge" style="margin:0 0 0 6px;">${escapeHtml(u.title)}</span></div>
+              <div style="font-size:0.82rem; color:var(--text-sub); margin-top:2px;">
+                @${escapeHtml(u.username)}｜點數：<strong>${u.points}</strong>｜全球排名：<strong>#${u.rank}</strong>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex; gap:6px;">
+            <button class="btn-soft btn-sm" onclick="openReportModal('${escapeHtml(u.username)}')">檢舉</button>
+            <button class="btn-danger btn-sm" onclick="doUnfollow('${escapeHtml(u.username)}')">取消追蹤</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    async function doFollow() {
+      const input = document.getElementById('follow-input');
+      const targetId = input.value.trim();
+      if (!targetId) return showToast('請輸入帳號 ID');
+      const res = await api('followUser', { targetId });
+      showToast(res.message);
+      if (res.success) {
+        input.value = '';
+        renderFollowingList(res.following);
+      }
+    }
+
+    async function doUnfollow(targetId) {
+      const res = await api('unfollowUser', { targetId });
+      showToast(res.message);
+      if (res.success) renderFollowingList(res.following);
+    }
+
+    function openReportModal(targetId) {
+      openModal('🚨 檢舉用戶：@' + targetId, `
+        <div class="form-group">
+          <label>請說明檢舉原因</label>
+          <textarea id="report-reason" rows="4" placeholder="例如：不當名稱、頭像或違規行為..."></textarea>
+        </div>
+        <button class="btn-danger" style="width:100%;" onclick="submitReport('${escapeHtml(targetId)}')">送出檢舉</button>
+      `);
+    }
+
+    async function submitReport(targetId) {
+      const content = document.getElementById('report-reason').value.trim();
+      if (!content) return showToast('請填寫檢舉原因');
+      const res = await api('reportUser', { targetId, content });
+      showToast(res.message);
+      if (res.success) closeModal();
+    }
+
+    // ==========================================
+    // 消息中心
+    // ==========================================
+    async function loadMessages() {
+      const box = document.getElementById('messages-list');
+      box.innerHTML = '載入中...';
+      const res = await api('getMessages');
+      if (!res.success) return box.innerHTML = '載入失敗';
+
+      currentUser.rank = res.myRank;
+      const logKey = STORAGE_RANK_LOG + currentUser.username.toLowerCase();
+      let rankLogs = JSON.parse(localStorage.getItem(logKey) || '[]');
+      if (res.rankUpEvent) rankLogs.unshift(res.rankUpEvent);
+
+      const snapKey = STORAGE_FOLLOW_RANKS + currentUser.username.toLowerCase();
+      const prevSnaps = JSON.parse(localStorage.getItem(snapKey) || '{}');
+      const nextSnaps = {};
+      (res.followedSnapshots || []).forEach(f => {
+        const k = f.username.toLowerCase();
+        nextSnaps[k] = f.rank;
+        if (prevSnaps[k] && f.rank < prevSnaps[k]) {
+          rankLogs.unshift({
+            id: 'frank_' + k + '_' + Date.now(),
+            type: 'rank',
+            time: new Date().toLocaleString('zh-TW'),
+            content: `你追蹤的 ${f.name}（@${f.username}）排名從第 ${prevSnaps[k]} 名上升至第 ${f.rank} 名！`
+          });
+        }
+      });
+      rankLogs = rankLogs.slice(0, 20);
+      localStorage.setItem(logKey, JSON.stringify(rankLogs));
+      localStorage.setItem(snapKey, JSON.stringify(nextSnaps));
+
+      allMessagesCache = [
+        ...(res.announcements || []).map(a => ({ type: 'announce', tag: '📢 官方公告', content: a.content, sub: a.target.toLowerCase() === 'all' ? '全體通知' : '專屬通知' })),
+        ...rankLogs.map(r => ({ type: 'rank', tag: '📈 排行上升', content: r.content, sub: r.time || '' })),
+        ...(res.checkinMessages || []).map(c => ({ type: 'checkin', tag: c.isToday ? '✅ 今日簽到' : '✅ 簽到動態', content: c.content, sub: c.time }))
+      ];
+      renderMessages();
+    }
+
+    function setMsgFilter(filter, btn) {
+      currentMsgFilter = filter;
+      document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      renderMessages();
+    }
+
+    function renderMessages() {
+      const box = document.getElementById('messages-list');
+      const list = currentMsgFilter === 'all' ? allMessagesCache : allMessagesCache.filter(m => m.type === currentMsgFilter);
+      if (!list.length) {
+        box.innerHTML = '<p style="color:var(--text-sub);">目前沒有相關消息 🐗</p>';
+        return;
+      }
+      box.innerHTML = list.map(m => `
+        <div class="msg-item type-${m.type}">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+            <span class="msg-tag">${m.tag}</span>
+            <span style="font-size:0.78rem; color:var(--text-sub);">${escapeHtml(m.sub)}</span>
+          </div>
+          <div style="white-space:pre-wrap; line-height:1.55;">${escapeHtml(m.content)}</div>
+        </div>
+      `).join('');
+    }
+
+    // ==========================================
+    // 個人設定 (網址或本機上傳壓縮) & 意見回饋
+    // ==========================================
+    function handleAvatarUrlInput(val) {
+      const url = val.trim();
+      if (url) {
+        pendingAvatarData = url;
+        document.getElementById('set-avatar-preview').src = url;
+        document.getElementById('avatar-compress-info').textContent = '使用網址頭像';
+      }
+    }
+
+    function handleAvatarFile(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = ev => {
+        const img = new Image();
+        img.onload = () => {
+          const size = 160;
+          const canvas = document.createElement('canvas');
+          canvas.width = size; canvas.height = size;
+          const ctx = canvas.getContext('2d');
+          const minSide = Math.min(img.width, img.height);
+          const sx = (img.width - minSide) / 2;
+          const sy = (img.height - minSide) / 2;
+          ctx.drawImage(img, sx, sy, minSide, minSide, 0, 0, size, size);
+
+          let dataUrl = canvas.toDataURL('image/jpeg', 0.78);
+          if (dataUrl.length > 40000) dataUrl = canvas.toDataURL('image/jpeg', 0.55);
+
+          pendingAvatarData = dataUrl;
+          document.getElementById('set-avatar-preview').src = dataUrl;
+          document.getElementById('set-avatar-url').value = '';
+          const kb = (dataUrl.length * 0.75 / 1024).toFixed(1);
+          document.getElementById('avatar-compress-info').textContent = `已自動壓縮為 160×160 JPG（約 ${kb} KB）`;
+        };
+        img.src = ev.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function resetDefaultAvatar() {
+      const def = getDefaultAvatar(currentUser.username);
+      pendingAvatarData = def;
+      document.getElementById('set-avatar-preview').src = def;
+      document.getElementById('set-avatar-url').value = def;
+      document.getElementById('set-avatar-file').value = '';
+      document.getElementById('avatar-compress-info').textContent = '已重設為預設頭像（記得按儲存）';
+    }
+
+    async function saveSettings(e) {
+      e.preventDefault();
+      const btn = document.getElementById('save-settings-btn');
+      btn.disabled = true; btn.textContent = '儲存中...';
+      try {
+        const newName = document.getElementById('set-name').value.trim();
+        const newPassword = document.getElementById('set-new-pass').value.trim();
+        const res = await api('updateProfile', { newName, newAvatar: pendingAvatarData, newPassword });
+        showToast(res.message);
+        if (res.success) {
+          currentUser.name = res.name;
+          currentUser.avatar = res.avatar;
+          if (newPassword) {
+            session.password = newPassword;
+            localStorage.setItem(STORAGE_SESSION, JSON.stringify(session));
+            document.getElementById('set-new-pass').value = '';
+          }
+          renderUserUI();
+        }
+      } finally {
+        btn.disabled = false; btn.textContent = '儲存設定';
+      }
+    }
+
+    async function submitFeedback(e) {
+      e.preventDefault();
+      const ta = document.getElementById('fb-content');
+      const res = await api('feedback', { content: ta.value.trim() });
+      showToast(res.message);
+      if (res.success) ta.value = '';
+    }
+
+    // ==========================================
+    // 5 款小遊戲（含 100% 保證有解＋SVG 水流山豬接水管）
+    // ==========================================
+    const GAMES = [
+      { id: 'needle', name: '見縫插針', emoji: '🎯', reward: 40, desc: '抓準時機插入 6 根飛針，不能撞針！' },
+      { id: 'mine',   name: '傳統踩地雷', emoji: '💣', reward: 50, desc: '6×6 經典玩法，避開 6 顆炸彈挖開安全區！' },
+      { id: 'sort',   name: '商品分類大師', emoji: '🍎', reward: 35, desc: '將架上的物品湊滿 3 個消除，清空貨架！' },
+      { id: 'match',  name: '方塊消除拼圖', emoji: '🧩', reward: 45, desc: '放置形狀填滿行列消除，累積達 60 分！' },
+      { id: 'pipe',   name: '山豬接水管', emoji: '🚰', reward: 50, desc: '轉動管線，連通左上起點至右下終點！' }
+    ];
+
+    function renderGamesGrid() {
+      const cds = (currentUser && currentUser.cooldowns) || {};
+      const now = nowServer();
+      document.getElementById('games-grid').innerHTML = GAMES.map(g => {
+        const diff = now - (Number(cds[g.id]) || 0);
+        const onCd = diff < COOLDOWN_MS;
+        const remain = Math.ceil((COOLDOWN_MS - diff) / 60000);
+        return `<div class="game-card">
+          <div>
+            <div class="game-emoji">${g.emoji}</div>
+            <div class="game-name">${g.name}</div>
+            <p class="game-desc">${g.desc}</p>
+          </div>
+          <div>
+            <div class="game-reward">過關獎勵：+${g.reward} 點數</div>
+            <button class="${onCd ? 'btn-muted' : 'btn-primary'}" style="width:100%;" ${onCd ? 'disabled' : ''} onclick="openGame('${g.id}')">
+              ${onCd ? `冷卻中 (${remain}分後)` : '開始挑戰'}
+            </button>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    function openModal(title, html) {
+      document.getElementById('modal-title').textContent = title;
+      document.getElementById('modal-body').innerHTML = html;
+      document.getElementById('modal').classList.remove('hidden');
+    }
+
+    function closeModal() {
+      cancelAnimationFrame(gameLoopId);
+      document.getElementById('modal').classList.add('hidden');
+      document.getElementById('modal-body').innerHTML = '';
+    }
+
+    async function claimGameWin(gameId) {
+      cancelAnimationFrame(gameLoopId);
+      const res = await api('playGame', { game: gameId });
+      showToast(res.message);
+      if (res.success) {
+        currentUser.points = res.points;
+        currentUser.cooldowns = res.cooldowns;
+        renderUserUI();
+        renderGamesGrid();
+      }
+      closeModal();
+    }
+
+    function openGame(id) {
+      if (id === 'needle') startNeedleGame();
+      if (id === 'mine') startMineGame();
+      if (id === 'sort') startSortGame();
+      if (id === 'match') startMatchGame();
+      if (id === 'pipe') startPipeGame();
+    }
+
+    // 1. 見縫插針
+    function startNeedleGame() {
+      openModal('🎯 見縫插針 (插滿 6 針過關)', `
+        <div style="text-align:center;">
+          <p id="needle-status" style="margin-bottom:8px; font-weight:700;">剩餘飛針：6</p>
+          <canvas id="needle-canvas" width="280" height="280" style="background:var(--bg-soft); border-radius:14px; border:1px solid var(--border);"></canvas>
+          <div style="margin-top:10px;"><button id="needle-shoot" class="btn-primary" style="width:100%;">點擊射出飛針！</button></div>
+        </div>
+      `);
+      const canvas = document.getElementById('needle-canvas');
+      const ctx = canvas.getContext('2d');
+      let angle = 0, pins = [0, Math.PI], remain = 6, failed = false;
+
+      function loop() {
+        angle += 0.032;
+        ctx.clearRect(0, 0, 280, 280);
+        const cx = 140, cy = 115, r = 34, len = 72;
+        pins.forEach(a => {
+          const rad = a + angle;
+          ctx.beginPath(); ctx.moveTo(cx, cy);
+          ctx.lineTo(cx + Math.cos(rad) * len, cy + Math.sin(rad) * len);
+          ctx.strokeStyle = '#f59e0b'; ctx.lineWidth = 3; ctx.stroke();
+          ctx.beginPath(); ctx.arc(cx + Math.cos(rad) * len, cy + Math.sin(rad) * len, 6, 0, Math.PI * 2);
+          ctx.fillStyle = '#f59e0b'; ctx.fill();
+        });
+        ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2);
+        ctx.fillStyle = '#1e293b'; ctx.fill();
+        ctx.fillStyle = '#fff'; ctx.font = 'bold 18px sans-serif'; ctx.textAlign = 'center';
+        ctx.fillText(remain, cx, cy + 6);
+        if (!failed && remain > 0) gameLoopId = requestAnimationFrame(loop);
+      }
+      document.getElementById('needle-shoot').onclick = () => {
+        if (failed || remain <= 0) return;
+        const target = (Math.PI / 2 - angle) % (Math.PI * 2);
+        const hit = pins.some(p => {
+          let d = Math.abs((p - target) % (Math.PI * 2));
+          if (d > Math.PI) d = Math.PI * 2 - d;
+          return d < 0.22;
+        });
+        if (hit) {
+          failed = true;
+          document.getElementById('needle-status').textContent = '💥 撞針了！請關閉後再挑戰';
+        } else {
+          pins.push(target); remain--;
+          document.getElementById('needle-status').textContent = '剩餘飛針：' + remain;
+          if (remain === 0) claimGameWin('needle');
+        }
+      };
+      loop();
+    }
+
+    // 2. 傳統踩地雷
+    function startMineGame() {
+      let flagMode = false, over = false;
+      const bombs = new Set();
+      while (bombs.size < 6) bombs.add(Math.floor(Math.random() * 36));
+      const open = new Set(), flags = new Set();
+
+      openModal('💣 傳統踩地雷 (6×6 / 6炸彈)', `
+        <div style="text-align:center;">
+          <button id="mine-mode" class="btn-soft btn-sm">目前模式：⛏️ 挖掘</button>
+          <div id="mine-board" class="mine-grid"></div>
+          <p id="mine-msg" style="font-weight:700; color:var(--text-sub);">挖開所有安全格子即可過關！</p>
+        </div>
+      `);
+
+      const countAdj = idx => {
+        const r = Math.floor(idx / 6), c = idx % 6;
+        let n = 0;
+        for (let dr = -1; dr <= 1; dr++) for (let dc = -1; dc <= 1; dc++) {
+          const nr = r + dr, nc = c + dc;
+          if (nr >= 0 && nr < 6 && nc >= 0 && nc < 6 && bombs.has(nr * 6 + nc)) n++;
+        }
+        return n;
+      };
+      const reveal = idx => {
+        if (open.has(idx) || flags.has(idx)) return;
+        open.add(idx);
+        if (countAdj(idx) === 0) {
+          const r = Math.floor(idx / 6), c = idx % 6;
+          for (let dr = -1; dr <= 1; dr++) for (let dc = -1; dc <= 1; dc++) {
+            const nr = r + dr, nc = c + dc;
+            if (nr >= 0 && nr < 6 && nc >= 0 && nc < 6) reveal(nr * 6 + nc);
+          }
+        }
+      };
+      const render = () => {
+        const board = document.getElementById('mine-board');
+        board.innerHTML = Array.from({ length: 36 }, (_, i) => {
+          let txt = '', cls = 'mine-cell';
+          if (open.has(i)) {
+            cls += ' open';
+            txt = bombs.has(i) ? '💥' : (countAdj(i) || '');
+          } else if (flags.has(i)) txt = '🚩';
+          return `<button class="${cls}" data-i="${i}">${txt}</button>`;
+        }).join('');
+        board.querySelectorAll('button').forEach(b => b.onclick = () => {
+          if (over) return;
+          const i = Number(b.dataset.i);
+          if (flagMode) { flags.has(i) ? flags.delete(i) : flags.add(i); render(); return; }
+          if (flags.has(i)) return;
+          if (bombs.has(i)) {
+            over = true; bombs.forEach(bi => open.add(bi));
+            document.getElementById('mine-msg').textContent = '💥 踩到地雷了！';
+            render(); return;
+          }
+          reveal(i); render();
+          if (open.size === 30) { over = true; claimGameWin('mine'); }
+        });
+      };
+      document.getElementById('mine-mode').onclick = function () {
+        flagMode = !flagMode;
+        this.textContent = flagMode ? '目前模式：🚩 插旗' : '目前模式：⛏️ 挖掘';
+      };
+      render();
+    }
+
+    // 3. 商品分類大師
+    function startSortGame() {
+      const icons = ['🍎','🍌','🍇','🍓','🍩','🧀'];
+      let pool = [];
+      icons.forEach(ic => pool.push(ic, ic, ic));
+      pool.sort(() => Math.random() - 0.5);
+      let tray = [];
+
+      openModal('🍎 商品分類大師', `
+        <p style="font-size:0.86rem; color:var(--text-sub); text-align:center;">點擊商品放入下方托盤（最多 5 格），湊滿 3 個相同自動消除！</p>
+        <div id="sort-board" class="sort-grid"></div>
+        <div id="sort-tray" class="sort-tray"></div>
+      `);
+
+      const render = () => {
+        document.getElementById('sort-board').innerHTML = pool.map((ic, i) =>
+          ic ? `<button class="btn-soft" style="font-size:1.4rem; padding:10px;" data-i="${i}">${ic}</button>` : '<div></div>'
+        ).join('');
+        document.getElementById('sort-tray').innerHTML = tray.map(ic => `<span style="font-size:1.5rem;">${ic}</span>`).join('');
+        document.getElementById('sort-board').querySelectorAll('button').forEach(b => b.onclick = () => {
+          const idx = Number(b.dataset.i);
+          const item = pool[idx];
+          pool[idx] = null;
+          tray.push(item);
+          const cnt = tray.filter(x => x === item).length;
+          if (cnt === 3) tray = tray.filter(x => x !== item);
+          render();
+          if (pool.every(x => !x) && tray.length === 0) return claimGameWin('sort');
+          if (tray.length >= 5) { showToast('托盤滿了！再試一次'); closeModal(); }
+        });
+      };
+      render();
+    }
+
+    // 4. 方塊消除拼圖
+    function startMatchGame() {
+      const SHAPES = [[[0,0]], [[0,0],[0,1]], [[0,0],[1,0]], [[0,0],[0,1],[1,0]], [[0,0],[0,1],[0,2]], [[0,0],[0,1],[1,0],[1,1]]];
+      const grid = Array(36).fill(0);
+      let score = 0, selected = 0;
+      let hand = [0,1,2].map(() => SHAPES[Math.floor(Math.random() * SHAPES.length)]);
+
+      openModal('🧩 方塊消除拼圖 (達 60 分過關)', `
+        <p style="text-align:center; font-weight:800;">目前分數：<span id="match-score">0</span> / 60</p>
+        <div id="match-board" class="block-grid"></div>
+        <div id="match-hand" class="piece-bar"></div>
+        <p style="font-size:0.8rem; color:var(--text-sub); text-align:center; margin-top:8px;">先點選下方方塊，再點擊棋盤放置（填滿整行或整列即消除得 20 分）</p>
+      `);
+
+      const shapeStr = sh => sh.map(() => '🟧').join('');
+      const render = () => {
+        document.getElementById('match-score').textContent = score;
+        const b = document.getElementById('match-board');
+        b.innerHTML = grid.map((v, i) => `<button class="block-cell ${v ? 'filled' : ''}" data-i="${i}"></button>`).join('');
+        b.querySelectorAll('button').forEach(btn => btn.onclick = () => {
+          const idx = Number(btn.dataset.i);
+          const r0 = Math.floor(idx / 6), c0 = idx % 6;
+          const sh = hand[selected];
+          if (!sh) return;
+          const cells = sh.map(([dr, dc]) => [r0 + dr, c0 + dc]);
+          if (cells.some(([r, c]) => r >= 6 || c >= 6 || grid[r * 6 + c])) return showToast('這裡放不下！');
+          cells.forEach(([r, c]) => grid[r * 6 + c] = 1);
+          score += cells.length * 2;
+          const clearRows = [], clearCols = [];
+          for (let r = 0; r < 6; r++) if ([0,1,2,3,4,5].every(c => grid[r * 6 + c])) clearRows.push(r);
+          for (let c = 0; c < 6; c++) if ([0,1,2,3,4,5].every(r => grid[r * 6 + c])) clearCols.push(c);
+          clearRows.forEach(r => { for (let c = 0; c < 6; c++) grid[r * 6 + c] = 0; score += 20; });
+          clearCols.forEach(c => { for (let r = 0; r < 6; r++) grid[r * 6 + c] = 0; score += 20; });
+
+          hand[selected] = SHAPES[Math.floor(Math.random() * SHAPES.length)];
+          render();
+          if (score >= 60) claimGameWin('match');
+        });
+        const h = document.getElementById('match-hand');
+        h.innerHTML = hand.map((sh, i) => `<button class="piece-btn ${i === selected ? 'selected' : ''}" data-i="${i}">${shapeStr(sh)}</button>`).join('');
+        h.querySelectorAll('button').forEach(btn => btn.onclick = () => { selected = Number(btn.dataset.i); render(); });
+      };
+      render();
+    }
+
+    // 5. 山豬接水管 (保證 100% 有解 + SVG 即時藍色水流)
+    function startPipeGame() {
+      const N = 4;
+      const DIRS = [[-1, 0, 2], [0, 1, 3], [1, 0, 0], [0, -1, 1]]; // 上右下左
+      const rotateCW = c => [c[3], c[0], c[1], c[2]];
+
+      // 步驟 1：用隨機 DFS 產生一條從 (0,0) 到 (3,3) 的真實不重複路徑，保證 100% 有解
+      const path = [];
+      const seen = Array.from({ length: N }, () => Array(N).fill(false));
+      function buildPath(r, c) {
+        seen[r][c] = true;
+        path.push([r, c]);
+        if (r === N - 1 && c === N - 1) return true;
+        const order = [0, 1, 2, 3].sort(() => Math.random() - 0.5);
+        for (const d of order) {
+          const nr = r + DIRS[d][0], nc = c + DIRS[d][1];
+          if (nr >= 0 && nr < N && nc >= 0 && nc < N && !seen[nr][nc]) {
+            if (buildPath(nr, nc)) return true;
+          }
+        }
+        path.pop();
+        return false;
+      }
+      buildPath(0, 0);
+
+      // 步驟 2：根據必通路徑設定每格精準開口，其餘空格隨機給直管或彎管
+      const board = Array.from({ length: N }, () => Array.from({ length: N }, () => [0, 0, 0, 0]));
+      board[0][0][3] = 1;           // 左上起點左方進水
+      board[N - 1][N - 1][1] = 1;   // 右下終點右方出水
+      for (let i = 0; i < path.length - 1; i++) {
+        const [r1, c1] = path[i], [r2, c2] = path[i + 1];
+        if (r2 === r1 - 1)      { board[r1][c1][0] = 1; board[r2][c2][2] = 1; }
+        else if (c2 === c1 + 1) { board[r1][c1][1] = 1; board[r2][c2][3] = 1; }
+        else if (r2 === r1 + 1) { board[r1][c1][2] = 1; board[r2][c2][0] = 1; }
+        else if (c2 === c1 - 1) { board[r1][c1][3] = 1; board[r2][c2][1] = 1; }
+      }
+      const pathSet = new Set(path.map(([r, c]) => `${r},${c}`));
+      for (let r = 0; r < N; r++) {
+        for (let c = 0; c < N; c++) {
+          if (!pathSet.has(`${r},${c}`)) {
+            board[r][c] = Math.random() < 0.45 ? [1, 0, 1, 0] : [0, 1, 1, 0];
+          }
+        }
+      }
+
+      // 計算水流到達的格子與是否勝利
+      function traceFlow() {
+        const wet = new Set();
+        if (!board[0][0][3]) return { wet, won: false };
+        const queue = [[0, 0]];
+        wet.add('0,0');
+        while (queue.length) {
+          const [r, c] = queue.shift();
+          for (let d = 0; d < 4; d++) {
+            if (!board[r][c][d]) continue;
+            const nr = r + DIRS[d][0], nc = c + DIRS[d][1], opp = DIRS[d][2];
+            const k = `${nr},${nc}`;
+            if (nr >= 0 && nr < N && nc >= 0 && nc < N && !wet.has(k) && board[nr][nc][opp]) {
+              wet.add(k);
+              queue.push([nr, nc]);
+            }
+          }
+        }
+        const won = wet.has(`${N - 1},${N - 1}`) && board[N - 1][N - 1][1] === 1;
+        return { wet, won };
+      }
+
+      // 步驟 3：隨機打亂所有水管角度，並保證開場不會直接過關
+      for (let r = 0; r < N; r++) {
+        for (let c = 0; c < N; c++) {
+          const turns = Math.floor(Math.random() * 4);
+          for (let t = 0; t < turns; t++) board[r][c] = rotateCW(board[r][c]);
+        }
+      }
+      let guard = 0;
+      while (traceFlow().won && guard < 10) {
+        board[0][0] = rotateCW(board[0][0]);
+        guard++;
+      }
+
+      function pipeSVG(conn, color) {
+        const segs = [];
+        if (conn[0]) segs.push(`<line x1="50" y1="50" x2="50" y2="0" stroke="${color}" stroke-width="22" stroke-linecap="butt"/>`);
+        if (conn[1]) segs.push(`<line x1="50" y1="50" x2="100" y2="50" stroke="${color}" stroke-width="22" stroke-linecap="butt"/>`);
+        if (conn[2]) segs.push(`<line x1="50" y1="50" x2="50" y2="100" stroke="${color}" stroke-width="22" stroke-linecap="butt"/>`);
+        if (conn[3]) segs.push(`<line x1="50" y1="50" x2="0" y2="50" stroke="${color}" stroke-width="22" stroke-linecap="butt"/>`);
+        return `<svg viewBox="0 0 100 100">${segs.join('')}<circle cx="50" cy="50" r="11" fill="${color}"/></svg>`;
+      }
+
+      openModal('🚰 山豬接水管 (100% 有解｜點擊旋轉)', `
+        <p style="font-size:0.85rem; color:var(--text-sub); text-align:center;">💧 水從左上角左方流入 ➜ 接通至右下角右方讓山豬喝水 🐗</p>
+        <div class="pipe-wrapper">
+          <div class="pipe-endpoint" style="align-self:flex-start; margin-top:16px;">💧<span style="font-size:0.72rem;">起點</span></div>
+          <div id="pipe-board" class="pipe-grid"></div>
+          <div class="pipe-endpoint" style="align-self:flex-end; margin-bottom:16px; color:var(--primary);">🐗<span style="font-size:0.72rem;">終點</span></div>
+        </div>
+      `);
+
+      let solved = false;
+      function renderPipe() {
+        const { wet, won } = traceFlow();
+        const el = document.getElementById('pipe-board');
+        const cells = [];
+        for (let r = 0; r < N; r++) {
+          for (let c = 0; c < N; c++) {
+            const isWet = wet.has(`${r},${c}`);
+            const color = won ? '#10b981' : (isWet ? '#0ea5e9' : '#94a3b8');
+            const cls = won ? 'pipe-cell win' : (isWet ? 'pipe-cell wet' : 'pipe-cell');
+            cells.push(`<button class="${cls}" data-r="${r}" data-c="${c}">${pipeSVG(board[r][c], color)}</button>`);
+          }
+        }
+        el.innerHTML = cells.join('');
+        if (won && !solved) {
+          solved = true;
+          setTimeout(() => claimGameWin('pipe'), 420);
+          return;
+        }
+        el.querySelectorAll('button').forEach(b => b.onclick = () => {
+          if (solved) return;
+          const r = Number(b.dataset.r), c = Number(b.dataset.c);
+          board[r][c] = rotateCW(board[r][c]);
+          renderPipe();
+        });
+      }
+      renderPipe();
+    }
+  </script>
+</body>
+</html>
